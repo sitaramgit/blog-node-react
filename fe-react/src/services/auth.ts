@@ -9,17 +9,6 @@ const createUser = (payload: any) => {
     .catch((e) => console.log(e));
 };
 
-const socialLogin = (code: any) => {
-  axios
-    .post(`${apiEndPoints.host_api.host}${apiEndPoints.auth.socialLogin}`, {
-      code,
-    })
-    .then((res: any) => {
-      if (res?.data?.access_token)
-        localStorage.setItem("access_token", res.data.token);
-    })
-    .catch((e) => console.log(e));
-};
 
 const loginUser = (payload: any) => {
   axios
@@ -33,6 +22,5 @@ const loginUser = (payload: any) => {
 
 export const authService = {
   createUser,
-  socialLogin,
   loginUser,
 };

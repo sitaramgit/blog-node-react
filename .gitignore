@@ -1,2 +1,5 @@
 /BE-NODE/node_modules
+/BE-NODE/.env
+
 /fe-react/node_modules
+/fe-react/.env

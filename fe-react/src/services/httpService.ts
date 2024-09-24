@@ -11,8 +11,13 @@ export const httpService = async (request: IApiService) => {
     const userDetails: any = store.getState().login?.userDetails
     const httpRequest: any =  {
         POST: async (postRequest: IApiService) => {
+            console.log(`${apiEndPoints.host_api.host}${postRequest.URL}`)
+    
             try {
-                const response = await axios.post(`${apiEndPoints.host_api.host}${postRequest.URL}`, postRequest.PAYLOAD);
+                const response = await axios.post(`${apiEndPoints.host_api.host}${postRequest.URL}`, postRequest.PAYLOAD, {headers: {
+                    Authorization: `Bearer ${userDetails.token}`,
+                    ...(postRequest?.HEADERS ? postRequest.HEADERS : {})
+                  }});
                 return response.data;
             } catch (error: any) {
                 if(error.status === 401){

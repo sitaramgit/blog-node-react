@@ -13,7 +13,15 @@ export const API_REQUESTS = {
     },
     SOCIAL_LOGIN: {
         METHOD: 'POST',
-        URL: apiEndPoints.auth.socialLogin,
+        URL: apiEndPoints.auth.googleLogin,
         PAYLOAD: {}
-    }
+    },
+    CREATE_POST: {
+        METHOD: 'POST',
+        URL: apiEndPoints.posts.createPost,
+        PAYLOAD: {},
+        HEADERS: {
+            'Content-Type': 'multipart/form-data',
+          }
+    },
 }

@@ -7,6 +7,7 @@ import Home from './un-auth/Home';
 import Discussion from './layout/Discussion';
 import { Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
+import CreatePost from './components/posts/CreatePost';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
     <Routes>
     <Route path="/login" element={<Login />} />
     <Route path="/home" element={<Home />} />
+    <Route path="/create-post" element={<CreatePost />} />
     <Route path="/" element={<Home />} />
     </Routes>
     </>

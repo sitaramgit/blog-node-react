@@ -16,7 +16,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AdbIcon from '@mui/icons-material/Adb';
 import { memo, useState } from 'react';
-import { Button } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { accessToken } from '../store/reducer/loginSlice';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -59,6 +62,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
+    const loginDetails = useSelector((state: any) => state?.login?.userDetails);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null);
   
@@ -77,6 +83,12 @@ const Header = () => {
       setAnchorEl(null);
       handleMobileMenuClose();
     };
+
+    const logout = () => {
+      const intData: any = {userDetails: {}};
+      dispatch(accessToken(intData));
+      handleMenuClose();
+    }
   
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
       setMobileMoreAnchorEl(event.currentTarget);
@@ -100,7 +112,7 @@ const Header = () => {
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+        <MenuItem onClick={logout}>Logout</MenuItem>
       </Menu>
     );
   
@@ -110,13 +122,13 @@ const Header = () => {
       <Menu
         anchorEl={mobileMoreAnchorEl}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'right',
         }}
         id={mobileMenuId}
         keepMounted
         transformOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'right',
         }}
         open={isMobileMenuOpen}
@@ -179,8 +191,8 @@ const Header = () => {
               />
             </Search>
             <Box sx={{ flexGrow: 1 }} />
-            <Button color="inherit">create post</Button>
-            <Button color="inherit">Login</Button>
+            { loginDetails?.token && <Button color="inherit" onClick={() => navigate('/create-post')}>create post</Button> }
+            { !loginDetails?.token && <Button color="inherit" onClick={() => navigate('/login')}>Login</Button>}
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="error">
@@ -196,7 +208,7 @@ const Header = () => {
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              <IconButton
+              {loginDetails?.token && <IconButton
                 size="large"
                 edge="end"
                 aria-label="account of current user"
@@ -205,8 +217,8 @@ const Header = () => {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle />
-              </IconButton>
+                <Avatar alt="code blog" src={loginDetails?.socialPicture} />
+              </IconButton>}
             </Box>
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
               <IconButton
