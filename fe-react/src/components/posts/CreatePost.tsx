@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import { Controller, useForm } from "react-hook-form";
 import { API_REQUESTS } from "../../common/apiRequests";
 import { httpService } from "../../services/httpService";
+import { useNavigate } from "react-router-dom";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -31,8 +32,30 @@ interface IFormInput {
     content: string;
     files: FileList;
 }
+let EditorModules = {
+    toolbar: [
+      [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+      [{size: []}],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, 
+       {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false,
+    }
+  }
+  let editorFormats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image', 'video'
+  ]
 
 const CreatePost = () => {
+    const navigate = useNavigate();
     const [value, setValue] = useState('');
     const { register, handleSubmit, formState: { errors }, control } = useForm<IFormInput>();
     const [editorValue, setEditorValue] = useState('');
@@ -46,6 +69,7 @@ const CreatePost = () => {
       try {
         const res = httpService(API_REQUESTS.CREATE_POST);
         console.log(res)
+        navigate('/home')
       } catch (error) {
         console.log(error)
       }
@@ -111,6 +135,8 @@ const CreatePost = () => {
                                         <ReactQuill
                                             theme="snow"
                                             value={editorValue}
+                                            modules={EditorModules}
+                                            formats={editorFormats}
                                             onChange={(value) => {
                                                 field.onChange(value);
                                                 setEditorValue(value);

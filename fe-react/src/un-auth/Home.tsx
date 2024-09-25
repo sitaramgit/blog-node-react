@@ -1,4 +1,4 @@
-import { memo, useState } from "react"
+import { memo, useEffect, useState } from "react"
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid2';
@@ -25,16 +25,34 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ImageIcon from '@mui/icons-material/Image';
 import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import { httpService } from "../services/httpService";
+import { API_REQUESTS } from "../common/apiRequests";
 
 const Home = () => {
     const [expanded, setExpanded] = useState(false);
+    const [blogs, setBlogs] = useState([]);
+    
 
+    useEffect(() => {
+        getAllPosts();
+    }, []);
+    
+    const getAllPosts = async () => {
+        try {
+            const result = await httpService(API_REQUESTS.GET_ALL_POSTS);
+            console.log(result)
+            setBlogs(result.blogs);
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
     return (
         <Container>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} mt={5}>
                 <Grid size={{ md: 2 }}>
                     <List>
                         <ListItem>
@@ -64,7 +82,9 @@ const Home = () => {
                     </List>
                 </Grid>
                 <Grid size={{ md: 7 }}>
-                    <Card >
+                    {blogs.map((blog: any) => {
+                        return <Box mb={2}>
+                            <Card >
                         <CardHeader
                             avatar={
                                 <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -76,13 +96,13 @@ const Home = () => {
                                     <MoreVertIcon />
                                 </IconButton>
                             }
-                            title="Shrimp and Chorizo Paella"
-                            subheader="September 14, 2016"
+                            title={blog.title}
+                            subheader={blog.created_at}
                         />
                         <CardMedia
                             component="img"
                             height="194"
-                            image="/static/images/cards/paella.jpg"
+                            image={blog.file_url}
                             alt="Paella dish"
                         />
                         <CardContent>
@@ -100,36 +120,12 @@ const Home = () => {
                                 <ShareIcon />
                             </IconButton>
                         </CardActions>
-                        <Collapse in={expanded} timeout="auto" unmountOnExit>
-                            <CardContent>
-                                <Typography sx={{ marginBottom: 2 }}>Method:</Typography>
-                                <Typography sx={{ marginBottom: 2 }}>
-                                    Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                                    aside for 10 minutes.
-                                </Typography>
-                                <Typography sx={{ marginBottom: 2 }}>
-                                    Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-                                    medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-                                    occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                                    large plate and set aside, leaving chicken and chorizo in the pan. Add
-                                    pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-                                    stirring often until thickened and fragrant, about 10 minutes. Add
-                                    saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                                </Typography>
-                                <Typography sx={{ marginBottom: 2 }}>
-                                    Add rice and stir very gently to distribute. Top with artichokes and
-                                    peppers, and cook without stirring, until most of the liquid is absorbed,
-                                    15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-                                    mussels, tucking them down into the rice, and cook again without
-                                    stirring, until mussels have opened and rice is just tender, 5 to 7
-                                    minutes more. (Discard any mussels that don&apos;t open.)
-                                </Typography>
-                                <Typography>
-                                    Set aside off of the heat to let rest for 10 minutes, and then serve.
-                                </Typography>
-                            </CardContent>
-                        </Collapse>
                     </Card>
+                        </Box>
+                        
+                    })}
+                    
+
                 </Grid>
                 <Grid size={{ md: 3 }}>
                     <Card sx={{ minWidth: 275 }}>

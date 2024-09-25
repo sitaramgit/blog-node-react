@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 import express, { Application, Request, Response } from 'express';
 import  cors  from 'cors';
 import multer from 'multer';
+import path from 'path';
 import connection from './connection';
 import connectToDatabase from './connection';
 import authRoutes from './routes/authRoutes';
@@ -14,6 +15,9 @@ const app: Application = express();
 
 // Middleware to parse JSON request body
 app.use(express.json()); // for parsing application/json
+
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.resolve('uploads')));
 
 // Middleware to parse URL-encoded request body
 app.use(express.urlencoded({ extended: true }));

@@ -24,4 +24,9 @@ export const API_REQUESTS = {
             'Content-Type': 'multipart/form-data',
           }
     },
+    GET_ALL_POSTS: {
+        METHOD: 'GET',
+        URL: apiEndPoints.posts.getAllPosts,
+        PAYLOAD: {}
+    },
 }
